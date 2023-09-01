@@ -1,3 +1,6 @@
+import json
+import langchain
+import openai
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from aws_lambda_powertools.logging import correlation_paths
@@ -5,6 +8,7 @@ from aws_lambda_powertools import Logger
 from aws_lambda_powertools import Tracer
 from aws_lambda_powertools import Metrics
 from aws_lambda_powertools.metrics import MetricUnit
+
 
 app = APIGatewayRestResolver()
 tracer = Tracer()
