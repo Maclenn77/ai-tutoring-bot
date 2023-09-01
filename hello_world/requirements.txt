@@ -1,2 +1,5 @@
 requests
 aws-lambda-powertools[tracer]
+dotenv
+openai
+langchain
