@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
     langchain-aws-telebot
 
-    Powertools example
+    Telegram Bot for tutoring
 
 Globals: # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-specification-template-anatomy-globals.html
     Function:
@@ -16,16 +16,18 @@ Resources:
         Type: AWS::Serverless::Function # More info about Function Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html
         Properties:
             Handler: app.lambda_handler
-            CodeUri: hello_world
-            Description: Hello World function
+            CodeUri: TutorBot/
+            Description: Chat with Both function
+            Policies:
+                - AWSLambdaBasicExecutionRole
             Architectures:
                 - x86_64
             Tracing: Active
             Events:
-                HelloPath:
+                ChatPath:
                     Type: Api # More info about API Event Source: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-api.html
                     Properties:
-                        Path: /hello
+                        Path: /
                         Method: GET
              # Powertools env vars: https://awslabs.github.io/aws-lambda-powertools-python/#environment-variables
             Environment:
