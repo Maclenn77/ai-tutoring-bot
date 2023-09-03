@@ -1,66 +1,66 @@
-# langchain-aws-telebot
+# AI Tutoring Bot
 
-Congratulations, you have just created a Serverless "Hello World" application using the AWS Serverless Application Model (AWS SAM) for the `python3.11` runtime, and options to bootstrap it with [**AWS Lambda Powertools for Python**](https://awslabs.github.io/aws-lambda-powertools-python/latest/) (Lambda Powertools) utilities for Logging, Tracing and Metrics.
+AI Tutoring Bot is a Telegram Bot designed to assist high-school students with their studies. It leverages Python 3.11, AWS Lambda, ChatGPT 3.5, DynamoDB, and langchain to create an intelligent study companion. This README will provide you with an overview of the bot, its functionality, and how to set it up for your own use.
 
-Powertools is a developer toolkit to implement Serverless best practices and increase developer velocity.
+## Features
 
-## Diagram
+AI Tutoring Bot offers the following key features:
+
+- **Study Assistance:** AI Tutoring Bot can provide answers to questions related to various subjects, offer explanations, and suggest study resources.
+
+- **Conversation History:** It saves parts of the conversation in a DynamoDB database to maintain context and provide better responses over time.
+
+- **Langchain Integration:** AI Tutoring Bot utilizes langchain to build prompts for ChatGPT, ensuring relevant and accurate responses.
+
+- **Serverless Architecture:** The bot is deployed using AWS SAM CLI, AWS Lambda, and CloudFormation, making it cost-effective and scalable.
+
+- **API Gateway:** An API Gateway is used to connect the Telegram API with the Lambda function, enabling seamless communication.
+
+## Architecture
 
 ![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/diagram.png?raw=tru)
 
-## Powertools features
+## Prerequisites
 
-Powertools provides three core utilities:
+Before setting up AI Tutoring Bot, you'll need the following:
 
-* **[Tracing](https://awslabs.github.io/aws-lambda-powertools-python/latest/core/tracer/)** - Decorators and utilities to trace Lambda function handlers, and both synchronous and asynchronous functions
-* **[Logging](https://awslabs.github.io/aws-lambda-powertools-python/latest/core/logger/)** - Structured logging made easier, and decorator to enrich structured logging with key Lambda context details
-* **[Metrics](https://awslabs.github.io/aws-lambda-powertools-python/latest/core/metrics/)** - Custom Metrics created asynchronously via CloudWatch Embedded Metric Format (EMF)
+- Python 3.11 installed on your development environment.
+- AWS SAM CLI installed: [AWS SAM CLI Installation Guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+- An AWS account with appropriate permissions to create and manage Lambda functions, DynamoDB tables, and API Gateway resources.
+- A Telegram Bot token. You can create one by talking to the [BotFather](https://core.telegram.org/bots#botfather).
+- A ChatGPT API key. You can obtain one from the OpenAI platform.
 
-Find the complete project's [documentation here](https://awslabs.github.io/aws-lambda-powertools-python).
+## Setup
 
-### Installing AWS Lambda Powertools for Python
+Follow these steps to set up AI Tutoring Bot:
 
-With [pip](https://pip.pypa.io/en/latest/index.html) installed, run: 
+1. Clone this repository to your local machine:
 
-```bash
-pip install aws-lambda-powertools
-```
+   ```bash
+   git clone https://github.com/maclenn77/ai-tutoring-bot.git
+   ```
 
-### Powertools Examples
+2. Navigate to the project directory:
 
-* [Tutorial](https://awslabs.github.io/aws-lambda-powertools-python/latest/tutorial)
-* [Serverless Shopping cart](https://github.com/aws-samples/aws-serverless-shopping-cart)
-* [Serverless Airline](https://github.com/aws-samples/aws-serverless-airline-booking)
-* [Serverless E-commerce platform](https://github.com/aws-samples/aws-serverless-ecommerce-platform)
-* [Serverless GraphQL Nanny Booking Api](https://github.com/trey-rosius/babysitter_api)
+   ```bash
+   cd ai-tutoring-bot
+   ```
 
-## Working with this project
+3. Create a virtual environment and activate it:
 
-This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
+4. Configure your AWS credentials using the AWS CLI:
 
-* hello_world - Code for the application's Lambda function.
-* events - Invocation events that you can use to invoke the function.
-* tests - Unit tests for the application code.
-* template.yaml - A template that defines the application's AWS resources.  
+   ```bash
+   aws configure
+   ```
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+5. Edit the `config.yaml` file to include your Telegram Bot token, ChatGPT API key, and other configuration options.
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
-
-* [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-* [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
-
-### Deploy the sample application
+6. Deploy the Lambda function and API Gateway using SAM CLI:
 
 The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
 
@@ -86,6 +86,25 @@ The first command will build the source of your application. The second command 
 * **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
 
 You can find your API Gateway Endpoint URL in the output values displayed after deployment.
+
+7. After the deployment is complete, note the API Gateway endpoint URL generated by SAM CLI.
+
+8. Set up a webhook in your Telegram Bot. Here's an example:
+
+```bash
+# Replace 'YOUR_BOT_TOKEN' with your actual Telegram Bot token
+BOT_TOKEN="YOUR_BOT_TOKEN"
+
+# Replace 'YOUR_API_GATEWAY_URL' with the URL of your deployed API Gateway endpoint
+API_GATEWAY_URL="https://YOUR_API_GATEWAY_URL/telegram/webhook"
+
+# Set up the webhook using curl
+curl -F "url=$API_GATEWAY_URL" "https://api.telegram.org/bot$BOT_TOKEN/setWebhook"
+```
+
+Execute this `curl` command in your terminal to set up the Telegram webhook. Once the webhook is successfully set up, your Telegram Bot will start receiving incoming messages and other updates at the specified endpoint.
+
+9. Start a conversation with your Telegram Bot, and it will provide study assistance based on the messages you send.
 
 ### Use the SAM CLI to build and test locally
 
@@ -123,9 +142,6 @@ The SAM CLI reads the application template to determine the API's routes and the
             Method: get
 ```
 
-### Add a resource to your application
-
-The application template uses AWS Serverless Application Model (AWS SAM) to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources such as functions, triggers, and APIs. For resources not included in [the SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use standard [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) resource types.
 
 ### Fetch, tail, and filter Lambda function logs
 
@@ -159,9 +175,18 @@ To delete the sample application that you created, use the AWS CLI. Assuming you
 ```bash
 sam delete --stack-name "langchain-aws-telebot"
 ```
+## Usage
 
-## Resources
+AI Tutoring Bot operates as a Telegram Bot. Start a conversation with your bot and send it study-related questions or requests for assistance. The bot will respond with helpful information based on its integration with ChatGPT and langchain.
 
-See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) for an introduction to SAM specification, the SAM CLI, and serverless application concepts.
+## Feedback and Contributions
 
-Next, you can use AWS Serverless Application Repository to deploy ready to use Apps that go beyond hello world samples and learn how authors developed their applications: [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/)
+If you have any feedback or would like to contribute to AI Tutoring Bot's development, please feel free to open issues or submit pull requests in the GitHub repository.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+Enjoy using AI Tutoring Bot to enhance your high school studies! If you have any questions or encounter issues during the setup process, please don't hesitate to reach out for assistance.
