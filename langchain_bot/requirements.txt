@@ -1,7 +1,6 @@
 requests
 aws-lambda-powertools
-# dotenv
 openai
-# langchain
+langchain
 boto3
 python-telegram-bot
