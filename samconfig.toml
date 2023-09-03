@@ -15,11 +15,11 @@ lint = true
 
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM"
-confirm_changeset = true
+confirm_changeset = false
 s3_prefix = "LangchainBot"
 resolve_s3 = false
 region = "us-east-2"
-disable_rollback = true
+disable_rollback = false
 
 [default.package.parameters]
 resolve_s3 = false

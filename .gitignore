@@ -193,6 +193,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+env.yaml
 
 # Spyder project settings
 .spyderproject
@@ -237,7 +238,14 @@ $RECYCLE.BIN/
 *.lnk
 
 # Build folder
-# */cache/*
+*/cache/*
 */build/*
 
 # End of https://www.gitignore.io/api/osx,linux,python,windows,pycharm,visualstudiocode
+
+# Ignore cache
+.aws-sam   # Ignore AWS SAM local build cache
+.aws-sam/cache
+.aws-sam/deps
+
+template.yaml
