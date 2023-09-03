@@ -22,7 +22,7 @@ Try AI Tutoring Bot on Telegram!
 
 -- **Start a conversation** with [AI Tutoring Bot](https://t.me/AI_TutoringBot).
 -- **Scan the following QR Code**
-![QR Code](https://github.com/maclenn77/ai-tutoring-bot/blob/main/assets/qr_code_ai_tutoring.png?raw=true)
+![QR Code](https://github.com/maclenn77/ai-tutoring-bot/blob/main/assets/qr_code_ai_tutoring.jpg?raw=true)
 
 ## Architecture
 
