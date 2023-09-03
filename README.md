@@ -4,6 +4,10 @@ Congratulations, you have just created a Serverless "Hello World" application us
 
 Powertools is a developer toolkit to implement Serverless best practices and increase developer velocity.
 
+## Diagram
+
+![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/diagram.png?raw=tru)
+
 ## Powertools features
 
 Powertools provides three core utilities:
