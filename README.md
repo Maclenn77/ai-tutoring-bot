@@ -16,6 +16,14 @@ AI Tutoring Bot offers the following key features:
 
 - **API Gateway:** An API Gateway is used to connect the Telegram API with the Lambda function, enabling seamless communication.
 
+## Demo
+
+Try AI Tutoring Bot on Telegram!
+
+-- **Start a conversation** with [AI Tutoring Bot](https://web.telegram.org/k/#@AI_TutoringBot).
+-- **Scan the following QR Code**
+![QR Code](path)
+
 ## Architecture
 
 ![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/diagram.png?raw=tru)
