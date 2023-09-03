@@ -22,11 +22,11 @@ Try AI Tutoring Bot on Telegram!
 
 -- **Start a conversation** with [AI Tutoring Bot](https://t.me/AI_TutoringBot).
 -- **Scan the following QR Code**
-![QR Code](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/qr_code_ai_tutoring.png?raw=true)
+![QR Code](https://github.com/maclenn77/ai-tutoring-bot/blob/main/assets/qr_code_ai_tutoring.png?raw=true)
 
 ## Architecture
 
-![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/diagram.png?raw=true)
+![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/ai-tutoring-bot/blob/main/assets/diagram.png?raw=true)
 
 ## Prerequisites
 
@@ -119,7 +119,7 @@ Execute this `curl` command in your terminal to set up the Telegram webhook. Onc
 Build your application with the `sam build --use-container` command.
 
 ```bash
-langchain-aws-telebot$ sam build --use-container
+ai-tutoring-bot$ sam build --use-container
 ```
 
 The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
@@ -129,14 +129,14 @@ Test a single function by invoking it directly with a test event. An event is a 
 Run functions locally and invoke them with the `sam local invoke` command.
 
 ```bash
-langchain-aws-telebot$ sam local invoke HelloWorldFunction --event events/event.json
+ai-tutoring-bot$ sam local invoke HelloWorldFunction --event events/event.json
 ```
 
 The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
 
 ```bash
-langchain-aws-telebot$ sam local start-api
-langchain-aws-telebot$ curl http://localhost:3000/
+ai-tutoring-bot$ sam local start-api
+ai-tutoring-bot$ curl http://localhost:3000/
 ```
 
 The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
@@ -158,7 +158,7 @@ To simplify troubleshooting, SAM CLI has a command called `sam logs`. `sam logs`
 `NOTE`: This command works for all AWS Lambda functions; not just the ones you deploy using SAM.
 
 ```bash
-langchain-aws-telebot$ sam logs -n HelloWorldFunction --stack-name langchain-aws-telebot --tail
+ai-tutoring-bot$ sam logs -n HelloWorldFunction --stack-name ai-tutoring-bot --tail
 ```
 
 You can find more information and examples about filtering Lambda function logs in the [SAM CLI Documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html).
@@ -168,12 +168,12 @@ You can find more information and examples about filtering Lambda function logs 
 Tests are defined in the `tests` folder in this project. Use PIP to install the test dependencies and run tests.
 
 ```bash
-langchain-aws-telebot$ pip install -r tests/requirements.txt --user
+ai-tutoring-bot$ pip install -r tests/requirements.txt --user
 # unit test
-langchain-aws-telebot$ python -m pytest tests/unit -v
+ai-tutoring-bot$ python -m pytest tests/unit -v
 # integration test, requiring deploying the stack first.
 # Create the env variable AWS_SAM_STACK_NAME with the name of the stack we are testing
-langchain-aws-telebot$ AWS_SAM_STACK_NAME="langchain-aws-telebot" python -m pytest tests/integration -v
+ai-tutoring-bot$ AWS_SAM_STACK_NAME="ai-tutoring-bot" python -m pytest tests/integration -v
 ```
 
 ### Cleanup
@@ -181,7 +181,7 @@ langchain-aws-telebot$ AWS_SAM_STACK_NAME="langchain-aws-telebot" python -m pyte
 To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
 
 ```bash
-sam delete --stack-name "langchain-aws-telebot"
+sam delete --stack-name "ai-tutoring-bot"
 ```
 ## Usage
 
