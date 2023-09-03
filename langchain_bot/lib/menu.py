@@ -30,8 +30,8 @@ class Menu:
         chat_id = chat_info['id']
         response = self.table.new_user(chat_info)
         logger.info(response)
-        message = """Hello, {}. I'm a bot that can help you to learn any High School subject. \n
-        Select a subject with */subject SUBJECT*. \n Please type */help* to see what I can do for you.
+        message = """Hello, {}. I'm a bot that can help you to learn any High School subject.\n
+        Select a subject with /subject SUBJECT.\nPlease type /help to see what I can do for you.
         """.format(chat_info['first_name'])
         response = self.msg.send_to_telegram(message, chat_id)
         logger.info(response.json())
@@ -41,28 +41,45 @@ class Menu:
 
         message="""I can help you to learn any High School subject. \n
         - Write \*/subject Subject to start learning a subject or change subject. Ex: /subject Math\n
-        - Write \*/evaluate\* to be evaluate about a subject\n
-        - Write \*/history\* to see your last messages\n
         - Write \*/help\* to see this message again\n
-        - Write \*/about\* to know more about this app\n"""
+        - Write \*/about\* to know more about this app\n\n
+        Once you select a subject, we can start to learn it."""
         self.msg.send_to_telegram(message, chat_id)
         pass
 
     def about():
         """Send about message"""
+
+        message = """This bot was created by Juan Paulo Perez Tejada (2023).\n
+        This bot uses OpenAI's GPT-3 to generate responses to user's messages.\n
+        Visit project repository: http://github.com/maclenn77/langchain-aws-telebot"""
+
+        self.msg.send_to_telegram(message, chat_id)
         pass
 
     def subject(self, chat_id, message):
         """Change subject or assign a new subject to user"""
 
+        if message == "/subject":
+            message = """Please specify a subject. \n
+            Example: /subject Math"""
+            self.msg.send_to_telegram(message, chat_id)
+            return
+
         subject = message.split(' ')[1:]
+
+        if subject == "":
+            message = """Please specify a subject. \n
+            Example: /subject Math"""
+            self.msg.send_to_telegram(message, chat_id)
+            return
 
         response = self.table.update_subject(chat_id, " ".join(subject))
         logger.info(response)
         self.msg.send_to_telegram("Okay! Let's study " + subject, chat_id)
 
     def evaluate():
-        """Evaluate user about a subject"""
+        """Evaluate user about a subject. Not Implemented yet."""
         pass
 
     def interaction(self, chat_id, message):
