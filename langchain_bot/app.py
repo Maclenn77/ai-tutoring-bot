@@ -6,7 +6,7 @@ from lib import menu
 
 config = {
     "TELEGRAM_TOKEN": os.environ['TELEGRAM_TOKEN'],
-    "OPENAI_TOKEN": os.environ['OPENAI_TOKEN'],
+    "OPENAI_API_KEY": os.environ['OPENAI_API_KEY'],
 }
 
 logger=Logger()
