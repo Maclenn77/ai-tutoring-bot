@@ -20,13 +20,13 @@ AI Tutoring Bot offers the following key features:
 
 Try AI Tutoring Bot on Telegram!
 
--- **Start a conversation** with [AI Tutoring Bot](https://web.telegram.org/k/#@AI_TutoringBot).
+-- **Start a conversation** with [AI Tutoring Bot](https://t.me/AI_TutoringBot).
 -- **Scan the following QR Code**
-![QR Code](path)
+![QR Code](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/qr_code_ai_tutoring.png?raw=true)
 
 ## Architecture
 
-![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/diagram.png?raw=tru)
+![Serverless Architecture for Langchain Bot](https://github.com/maclenn77/langchain-aws-telebot/blob/main/assets/diagram.png?raw=true)
 
 ## Prerequisites
 
