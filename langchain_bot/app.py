@@ -1,6 +1,5 @@
 import os
 import json
-from aws_lambda_powertools import Logger
 from lib import dynamodb as dyn
 from lib import menu
 
@@ -9,18 +8,15 @@ config = {
     "OPENAI_API_KEY": os.environ['OPENAI_API_KEY'],
 }
 
-logger=Logger()
-
 # Write Telegram Bot Token
 def process_event(event):
     message = json.loads(event['body'])
-    db_table = dyn.DynamoDB('LambdaDynamo')
+    db_table = dyn.DynamoDB('AITutoringTable')
     chat_info = message.get('message', message.get('my_chat_member')).get('chat')
     message_info = {
         'message_id': message.get('message').get('message_id'),
         'text': message.get('message').get('text')
     }
-    logger.info(message_info)
 
     text = message_info['text']
     options = menu.Menu(config, db_table)
@@ -33,6 +29,9 @@ def process_event(event):
         return
     elif text == "/help":
         options.help(chat_info['id'])
+        return
+    elif text == "/about":
+        options.about(chat_info['id'])
         return
     elif text.split(' ')[0] == "/subject":
         options.subject(chat_info['id'], text)
