@@ -3,7 +3,6 @@ from lib.chat_model import ChatModel
 from lib.tutor_chain import TutorChain
 from langchain.memory.chat_message_histories import DynamoDBChatMessageHistory
 import json
-from aws_lambda_powertools import Logger
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     SystemMessage,
@@ -12,7 +11,6 @@ from langchain.prompts.chat import (
 )
 from langchain.memory import ConversationBufferMemory
 
-logger = Logger()
 
 # Create a Menu class that will be used to create a menu for the bot
 class Menu:
@@ -28,13 +26,11 @@ class Menu:
         """Add user to DynamoDB table and send welcome message"""
 
         chat_id = chat_info['id']
-        response = self.table.new_user(chat_info)
-        logger.info(response)
+        self.table.new_user(chat_info)
         message = """Hello, {}. I'm a bot that can help you to learn any High School subject.\n
         Select a subject with /subject SUBJECT.\nPlease type /help to see what I can do for you.
         """.format(chat_info['first_name'])
-        response = self.msg.send_to_telegram(message, chat_id)
-        logger.info(response.json())
+        self.msg.send_to_telegram(message, chat_id)
 
     def help(self, chat_id):
         """Send help message"""
@@ -47,7 +43,7 @@ class Menu:
         self.msg.send_to_telegram(message, chat_id)
         pass
 
-    def about():
+    def about(self, chat_id):
         """Send about message"""
 
         message = """This bot was created by Juan Paulo Perez Tejada (2023).\n
@@ -74,8 +70,7 @@ class Menu:
             self.msg.send_to_telegram(message, chat_id)
             return
 
-        response = self.table.update_subject(chat_id, " ".join(subject))
-        logger.info(response)
+        self.table.update_subject(chat_id, " ".join(subject))
         self.msg.send_to_telegram("Okay! Let's study " + subject, chat_id)
 
     def evaluate():
@@ -90,7 +85,7 @@ class Menu:
         if 'subject' in user:
             # send chat_id, user_data to prepare prompt
             # prompt = prepare_prompt(chat_id, user_data)
-            history = DynamoDBChatMessageHistory(table_name="SessionTable", session_id=str(chat_id))
+            history = DynamoDBChatMessageHistory(table_name="AITutoringTable", session_id=str(chat_id))
             template = """You're a friendly and patient High School Tutor. A student called {student_name} has asked help for the subject {subject_to_study}.
     If the subject is not related to high school, you must ask the student to change the subject using the command /subject SUBJECT.
     If the subject is related to High School, you should help the student to learn the subject.
@@ -101,7 +96,6 @@ class Menu:
     [Student {student_name}]: [/subject {subject_to_study}]
     [Tutor]: [Okay! Let's study {subject_to_study}]
     """.format(student_name=user['user_data']['first_name'], subject_to_study=user['subject'])
-            logger.info(template)
             chat_prompt = ChatPromptTemplate.from_messages([SystemMessage(content=template),
                                                       MessagesPlaceholder(variable_name="chat_history"),
                                                       HumanMessagePromptTemplate.from_template("{text}")
@@ -112,7 +106,6 @@ class Menu:
                                    prompt=chat_prompt,
                                    memory=memory)
             response = langchain.run(message)
-            logger.info(response)   
             self.msg.send_to_telegram(response, chat_id)
             history.add_user_message(message)
             history.add_ai_message(response)

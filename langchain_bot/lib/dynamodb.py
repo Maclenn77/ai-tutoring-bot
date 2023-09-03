@@ -46,23 +46,6 @@ class DynamoDB:
         else:
             return response
 
-    # def add_message(self, chat_id, message_info):
-    #     """Add user to DynamoDB table"""
-
-    #     try:
-    #         response = self.table.update_item(
-    #             Key={ 'user_id': str(chat_id) },
-    #             UpdateExpression="SET messages = list_append(messages, :message)",
-    #             ExpressionAttributeValues={
-    #                 ':message': message_info
-    #             },
-    #             ReturnValues="UPDATED_NEW"
-    #         )
-    #     except ClientError as err:
-    #         return err.response['Error']['Message'] + " - " + err.response['Error']['Code']
-    #     else:
-    #         return response
-
     def get_user(self, chat_id):
         """Get user from DynamoDB table"""
         try:
