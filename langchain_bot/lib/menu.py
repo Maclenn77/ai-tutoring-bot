@@ -27,7 +27,7 @@ class Menu:
 
         chat_id = chat_info['id']
         self.table.new_user(chat_info)
-        message = """Hello, {}. I'm a bot that can help you to learn any High School subject.\n
+        message = """Hello, {}. I'm a bot that can help you learn any High School subject.\n
         Select a subject with /subject SUBJECT.\nPlease type /help to see what I can do for you.
         """.format(chat_info['first_name'])
         self.msg.send_to_telegram(message, chat_id)
@@ -35,10 +35,10 @@ class Menu:
     def help(self, chat_id):
         """Send help message"""
 
-        message="""I can help you to learn any High School subject. \n
-        - Write \*/subject Subject to start learning a subject or change subject. Ex: /subject Math\n
-        - Write \*/help\* to see this message again\n
-        - Write \*/about\* to know more about this app\n\n
+        message="""I can help you to learn any High School subject.\n
+        - Write /subject Subject to start learning a subject or change subject. Ex: /subject Math\n
+        - Write /help to see this message again\n
+        - Write /about to know more about this app\n\n
         Once you select a subject, we can start to learn it."""
         self.msg.send_to_telegram(message, chat_id)
         pass
@@ -46,9 +46,9 @@ class Menu:
     def about(self, chat_id):
         """Send about message"""
 
-        message = """This bot was created by Juan Paulo Perez Tejada (2023).\n
-        This bot uses OpenAI's GPT-3 to generate responses to user's messages.\n
-        Visit project repository: http://github.com/maclenn77/langchain-aws-telebot"""
+        message = """This bot was created by Juan Paulo Perez Tejada (2023).
+        \nThis bot uses OpenAI's GPT-3 to generate responses to user's messages.
+        \nVisit project repository: http://github.com/maclenn77/langchain-aws-telebot"""
 
         self.msg.send_to_telegram(message, chat_id)
         pass
@@ -57,8 +57,8 @@ class Menu:
         """Change subject or assign a new subject to user"""
 
         if message == "/subject":
-            message = """Please specify a subject. \n
-            Example: /subject Math"""
+            message = """Please specify a subject.
+            \nExample: /subject Math"""
             self.msg.send_to_telegram(message, chat_id)
             return
 
