@@ -63,6 +63,7 @@ class Menu:
             return
 
         subject = message.split(' ')[1:]
+        subject = ' '.join(subject)
 
         if subject == "":
             message = """Please specify a subject. \n
@@ -70,7 +71,7 @@ class Menu:
             self.msg.send_to_telegram(message, chat_id)
             return
 
-        self.table.update_subject(chat_id, " ".join(subject))
+        self.table.update_subject(chat_id, subject)
         self.msg.send_to_telegram("Okay! Let's study " + subject, chat_id)
 
     def evaluate():
