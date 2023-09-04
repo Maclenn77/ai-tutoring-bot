@@ -8,7 +8,7 @@ from langchain.prompts.chat import (
 class TutorPromptBuilder:
 
     def build(template):
-        ChatPromptTemplate.from_messages([SystemMessage(content=template),
+        return ChatPromptTemplate.from_messages([SystemMessage(content=template),
                                MessagesPlaceholder(variable_name="chat_history"),
                                HumanMessagePromptTemplate.from_template("{text}")
                                ])
