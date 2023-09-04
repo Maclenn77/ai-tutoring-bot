@@ -1,17 +1,8 @@
-import os
 import json
-from lib import dynamodb as dyn
-from lib import menu
+from lib.menu import Menu
 
-config = {
-    "TELEGRAM_TOKEN": os.environ['TELEGRAM_TOKEN'],
-    "OPENAI_API_KEY": os.environ['OPENAI_API_KEY'],
-}
-
-# Write Telegram Bot Token
 def process_event(event):
     message = json.loads(event['body'])
-    db_table = dyn.DynamoDB('AITutoringTable')
     chat_info = message.get('message', message.get('my_chat_member')).get('chat')
     message_info = {
         'message_id': message.get('message').get('message_id'),
@@ -19,7 +10,7 @@ def process_event(event):
     }
 
     text = message_info['text']
-    options = menu.Menu(config, db_table)
+    options = Menu()
 
     if text is None:
         options.no_text(chat_info['id'])

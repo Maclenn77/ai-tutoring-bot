@@ -53,4 +53,4 @@ class DynamoDB:
         except ClientError as err:
             return err.response['Error']['Message'] + " - " + err.response['Error']['Code']
         else:
-            return response['Item']
+            return response.get('Item', "No user found.")
