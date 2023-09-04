@@ -6,7 +6,7 @@ from lib.chat_model import ChatModel
 from lib.tutor_chain import TutorChain
 from lib.tutor_prompt_builder import TutorPromptBuilder
 from langchain.memory.chat_message_histories import DynamoDBChatMessageHistory
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationTokenBufferMemory
 
 def save_conversation(db, message, response):
     db.add_user_message(message)
@@ -84,13 +84,16 @@ class Menu:
             template = TutorPromptBuilder.template(user)
             chat_prompt = TutorPromptBuilder.build(template)
 
-            memory = ConversationBufferMemory(memory_key="chat_history",
-                                              chat_memory=history,
-                                              return_messages=True)
             
             chat = ChatModel(openai_api_key=self.config['OPENAI_API_KEY'],
                              temperature=1.2,
                              model="gpt-3.5-turbo-0613")
+            
+            memory = ConversationTokenBufferMemory(memory_key="chat_history",
+                                              chat_memory=history,
+                                              llm=chat,
+                                              return_messages=True,
+                                              max_token_limit=1000)
             
             langchain = TutorChain(llm=chat,
                                    prompt=chat_prompt,

@@ -4,3 +4,4 @@ openai
 langchain
 boto3
 python-telegram-bot
+tiktoken
