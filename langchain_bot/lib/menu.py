@@ -1,124 +1,117 @@
+import os
+from lib.ui_messages import UIMessages as UI
 from lib.messenger import Messenger as msg
+from lib.dynamodb import DynamoDB
 from lib.chat_model import ChatModel
 from lib.tutor_chain import TutorChain
+from lib.tutor_prompt_builder import TutorPromptBuilder
 from langchain.memory.chat_message_histories import DynamoDBChatMessageHistory
-import json
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessage,
-    HumanMessagePromptTemplate,
-    MessagesPlaceholder
-)
 from langchain.memory import ConversationBufferMemory
+
+def save_conversation(db, message, response):
+    db.add_user_message(message)
+    db.add_ai_message(response)
 
 
 # Create a Menu class that will be used to create a menu for the bot
 class Menu:
-    def __init__(self, config, table):
+    def __init__(self):
         self.config = {
-            "TELEGRAM_TOKEN": config['TELEGRAM_TOKEN'],
-            "OPENAI_API_KEY": config['OPENAI_API_KEY']
+            "TELEGRAM_TOKEN": os.environ['TELEGRAM_TOKEN'],
+            "OPENAI_API_KEY": os.environ['OPENAI_API_KEY'],
+            "USERS_TABLENAME": os.environ['USERS_TABLENAME'],
+            "CHAT_MESSAGES_TABLENAME": os.environ['CHAT_MESSAGES_TABLENAME']
         }
+
         self.msg = msg(self.config)
-        self.table = table
+        self.users_table = DynamoDB(self.config.get('USERS_TABLENAME'))
 
     def start(self, chat_info):
         """Add user to DynamoDB table and send welcome message"""
 
         chat_id = chat_info['id']
-        self.table.new_user(chat_info)
-        message = """Hello, {}. I'm a bot that can help you learn any High School subject.\n
-        Select a subject with /subject SUBJECT.\nPlease type /help to see what I can do for you.
-        """.format(chat_info['first_name'])
+        self.users_table.new_user(chat_info)
+        message = UI.welcome_message(chat_info.get('first_name', "student"))
         self.msg.send_to_telegram(message, chat_id)
 
     def help(self, chat_id):
         """Send help message"""
 
-        message="""I can help you to learn any High School subject.\n
-        - Write /subject Subject to start learning a subject or change subject. Ex: /subject Math\n
-        - Write /help to see this message again\n
-        - Write /about to know more about this app\n\n
-        Once you select a subject, we can start to learn it."""
+        message= UI.help_message
         self.msg.send_to_telegram(message, chat_id)
-        pass
 
     def about(self, chat_id):
         """Send about message"""
 
-        message = """This bot was created by Juan Paulo Perez Tejada (2023).
-        \nThis bot uses OpenAI's GPT-3 to generate responses to user's messages.
-        \nVisit project repository: http://github.com/maclenn77/langchain-aws-telebot"""
-
+        message = UI.about_message
         self.msg.send_to_telegram(message, chat_id)
-        pass
 
     def subject(self, chat_id, message):
         """Change subject or assign a new subject to user"""
 
         if message == "/subject":
-            message = """Please specify a subject.
-            \nExample: /subject Math"""
+            message = UI.no_subject_specified_message
+
             self.msg.send_to_telegram(message, chat_id)
             return
 
-        subject = message.split(' ')[1:]
-        subject = ' '.join(subject)
+        subject = ' '.join(message.split(' ')[1:])
 
         if subject == "":
-            message = """Please specify a subject. \n
-            Example: /subject Math"""
+            message = UI.no_subject_message
             self.msg.send_to_telegram(message, chat_id)
             return
-
-        self.table.update_subject(chat_id, subject)
-        self.msg.send_to_telegram("Okay! Let's study " + subject, chat_id)
+        
+        message = UI.subject_message(subject)
+        self.users_table.update_subject(chat_id, subject)
+        self.msg.send_to_telegram(message, chat_id)
 
     def evaluate():
         """Evaluate user about a subject. Not Implemented yet."""
         pass
 
     def interaction(self, chat_id, message):
-        """Send message to GPT-3 and save it to DynamoDB table"""
+        """Start an interaction with the bot. If user has a subject, bot will respond to user's message."""
 
-        user = self.table.get_user(chat_id)
+        user = self.users_table.get_user(chat_id)
 
         if 'subject' in user:
-            # send chat_id, user_data to prepare prompt
-            # prompt = prepare_prompt(chat_id, user_data)
-            history = DynamoDBChatMessageHistory(table_name="AITutoringTable", session_id=str(chat_id))
-            template = """You're a friendly and patient High School Tutor. A student called {student_name} has asked help for the subject {subject_to_study}.
-    If the subject is not related to high school, you must ask the student to change the subject using the command /subject SUBJECT.
-    If the subject is related to High School, you should help the student to learn the subject.
-    When student asks a question, you should answer it. If the student doesn't ask a question, you should ask a question to the student about the subject or give a curious fact.
-    Sometimes refer to the student by name, but don't overdo it.
-    Previous messages:
 
-    [Student {student_name}]: [/subject {subject_to_study}]
-    [Tutor]: [Okay! Let's study {subject_to_study}]
-    """.format(student_name=user['user_data']['first_name'], subject_to_study=user['subject'])
-            chat_prompt = ChatPromptTemplate.from_messages([SystemMessage(content=template),
-                                                      MessagesPlaceholder(variable_name="chat_history"),
-                                                      HumanMessagePromptTemplate.from_template("{text}")
-                                                      ])
-            memory = ConversationBufferMemory(memory_key="chat_history", chat_memory=history, return_messages=True)
-            chat = ChatModel(openai_api_key=self.config['OPENAI_API_KEY'], temperature=1.2, model="gpt-3.5-turbo-0613")
+            session_id = str(chat_id) + user['subject']
+            history = DynamoDBChatMessageHistory(table_name=self.config.get('CHAT_MESSAGES_TABLENAME'),
+                                                 session_id=session_id)
+
+            template = TutorPromptBuilder.template(user)
+            chat_prompt = TutorPromptBuilder.build(template)
+
+            memory = ConversationBufferMemory(memory_key="chat_history",
+                                              chat_memory=history,
+                                              return_messages=True)
+            
+            chat = ChatModel(openai_api_key=self.config['OPENAI_API_KEY'],
+                             temperature=1.2,
+                             model="gpt-3.5-turbo-0613")
+            
             langchain = TutorChain(llm=chat,
                                    prompt=chat_prompt,
                                    memory=memory)
             response = langchain.run(message)
+
             self.msg.send_to_telegram(response, chat_id)
-            history.add_user_message(message)
-            history.add_ai_message(response)
+
+            save_conversation(history, message, response)
+            
+        elif user == "No user found.":
+            message = UI.no_user_found_message
+            self.msg.send_to_telegram(message, chat_id)
+            return
         else:
-            message = """"Before starting a chat, select a subject with the command /subject SUBJECT.\n
-            Example: /subject Math"""
+            message = UI.select_subject_message
             self.msg.send_to_telegram(message, chat_id) 
         return
 
     def no_text(self, chat_id):
         """Respond to non-text messages"""
 
-        message=""""Sorry, I can only respond to text messages. \n 
-        Please try again. \n If you need help, type /help"""""
+        message= UI.no_text_message
         self.msg.send_to_telegram(message, chat_id)
