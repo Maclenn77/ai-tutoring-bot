@@ -87,7 +87,7 @@ class Menu:
             
             chat = ChatModel(openai_api_key=self.config['OPENAI_API_KEY'],
                              temperature=1.2,
-                             model="gpt-3.5-turbo-0613")
+                             model="gpt-4o-mini")
             
             memory = ConversationTokenBufferMemory(memory_key="chat_history",
                                               chat_memory=history,
